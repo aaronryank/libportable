@@ -42,7 +42,7 @@ enum {
     defined(__CYGWIN__)
 
 #define SYSTEM WINDOWS
-#include "headers/windows.h"
+#define SYSTEM_WINDOWS
 
 /* all true UNIX systems */
 #elif defined(unix)     || \
@@ -54,16 +54,37 @@ enum {
       defined(__SVR4)
 
 #define SYSTEM UNIX
-#include "headers/unix.h"
+#define SYSTEM_UNIX
 
 /* Apple defines both. */
 #elif defined(__APPLE__) && defined(__MACH__)
 
 #define SYSTEM APPLE
-#include "headers/apple.h"
+#define SYSTEM_APPLE
 
 #else
 #define SYSTEM SYS_UNDEFINED
+#endif
+
+/*********************
+ SYSTEM-SPECIFIC STUFF
+ *********************/
+
+#ifdef SYSTEM_WINDOWS
+#include <windows.h>
+
+#ifndef __CYGWIN__
+#include <conio.h>
+#endif
+
+#define PERR(bSuccess, api) {if(!(bSuccess)) printf("%s: Error %d from %s on line %d\n", __FILE__, (int) GetLastError(), api, (int) __LINE__);}
+#else
+#define PERR(success, api) {if(!(success)) printf("%s: Error in %s on line %d\n", __FILE__, api, (int) __LINE__);}
+#endif
+
+#ifdef SYSTEM_UNIX
+#include <unistd.h>
+#include <termios.h>
 #endif
 
 /****************************
@@ -104,28 +125,25 @@ enum {
  CALL PORTABLE FUNCTIONS
  ***********************/
 
-/* ignore warnings in most compilers */
-
-#ifdef __clang__
-#pragma clang diagnostic ignored "-Wimplicit-function-declaration"
-#endif
-
-#ifdef __GNUC__
-#pragma GCC diagnostic ignored "-Wimplicit-function-declaration"
-#endif
-
 #define ___P(x, y) x ## y
 #define __P(x, y) ___P(x, y)
 
 #ifdef POSIX
+#define EXTERN_PORTABLE(return_type, family, function) extern return_type __P(POSIX##__, __P(__P(function, _), family))
 #define PORTABLY(family, function, ...)  __P(POSIX##__, __P(__P(function, _), family))  (__VA_ARGS__)
 #else
+#define EXTERN_PORTABLE(return_type, family, function) extern return_type __P(__P(SYSTEM, __), __P(__P(function, _), family))
 #define PORTABLY(family, function, ...)  __P(__P(SYSTEM, __), __P(__P(function, _), family))  (__VA_ARGS__)
 #endif
 
 /*******
  EXTERNS
  *******/
+
+EXTERN_PORTABLE(int, cursor, set)    (int, int);
+EXTERN_PORTABLE(void, screen, clear) (void);
+EXTERN_PORTABLE(int, cursor, home)   (void);
+EXTERN_PORTABLE(int, text, color)    (int);
 
 // portability info
 extern char *get_system_name(void);
