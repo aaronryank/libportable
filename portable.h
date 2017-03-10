@@ -41,8 +41,8 @@ enum {
     defined(__WINNT__)   || \
     defined(__CYGWIN__)
 
-#define SYSTEM WINDOWS
-#define SYSTEM_WINDOWS
+# define SYSTEM WINDOWS
+# define SYSTEM_WINDOWS
 
 /* all true UNIX systems */
 #elif defined(unix)     || \
@@ -53,17 +53,17 @@ enum {
       defined(__sun)    || \
       defined(__SVR4)
 
-#define SYSTEM UNIX
-#define SYSTEM_UNIX
+# define SYSTEM UNIX
+# define SYSTEM_UNIX
 
 /* Apple defines both. */
 #elif defined(__APPLE__) && defined(__MACH__)
 
-#define SYSTEM APPLE
-#define SYSTEM_APPLE
+# define SYSTEM APPLE
+# define SYSTEM_APPLE
 
 #else
-#define SYSTEM SYS_UNDEFINED
+# define SYSTEM SYS_UNDEFINED
 #endif
 
 /*********************
@@ -71,20 +71,20 @@ enum {
  *********************/
 
 #ifdef SYSTEM_WINDOWS
-#include <windows.h>
+# include <windows.h>
 
-#ifndef __CYGWIN__
-#include <conio.h>
-#endif
+# ifndef __CYGWIN__
+#  include <conio.h>
+# endif
 
-#define PERR(bSuccess, api) {if(!(bSuccess)) printf("%s: Error %d from %s on line %d\n", __FILE__, (int) GetLastError(), api, (int) __LINE__);}
+# define PERR(bSuccess, api) {if(!(bSuccess)) printf("%s: Error %d from %s on line %d\n", __FILE__, (int) GetLastError(), api, (int) __LINE__);}
 #else
-#define PERR(success, api) {if(!(success)) printf("%s: Error in %s on line %d\n", __FILE__, api, (int) __LINE__);}
+# define PERR(success, api) {if(!(success)) printf("%s: Error in %s on line %d\n", __FILE__, api, (int) __LINE__);}
 #endif
 
 #ifdef SYSTEM_UNIX
-#include <unistd.h>
-#include <termios.h>
+# include <unistd.h>
+# include <termios.h>
 #endif
 
 /****************************
@@ -118,7 +118,7 @@ enum {
     defined(__MVS__) || defined(__HOS_MVS__) || defined(__TOS_MVS__) ||\
     defined(__CYGWIN__)
 
-#define POSIX
+# define POSIX
 #endif
 
 /***********************
@@ -129,11 +129,11 @@ enum {
 #define __P(x, y) ___P(x, y)
 
 #ifdef POSIX
-#define EXTERN_PORTABLE(return_type, family, function) extern return_type __P(POSIX##__, __P(__P(function, _), family))
-#define PORTABLY(family, function, ...)  __P(POSIX##__, __P(__P(function, _), family))  (__VA_ARGS__)
+# define EXTERN_PORTABLE(return_type, family, function) extern return_type __P(POSIX##__, __P(__P(function, _), family))
+# define PORTABLY(family, function, ...)  __P(POSIX##__, __P(__P(function, _), family))  (__VA_ARGS__)
 #else
-#define EXTERN_PORTABLE(return_type, family, function) extern return_type __P(__P(SYSTEM, __), __P(__P(function, _), family))
-#define PORTABLY(family, function, ...)  __P(__P(SYSTEM, __), __P(__P(function, _), family))  (__VA_ARGS__)
+# define EXTERN_PORTABLE(return_type, family, function) extern return_type __P(__P(SYSTEM, __), __P(__P(function, _), family))
+# define PORTABLY(family, function, ...)  __P(__P(SYSTEM, __), __P(__P(function, _), family))  (__VA_ARGS__)
 #endif
 
 /*******
