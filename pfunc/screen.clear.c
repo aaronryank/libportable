@@ -18,6 +18,8 @@
 #include <stdio.h>
 #include "../portable.h"
 
+#ifdef SYSTEM_WINDOWS
+
 void WINDOWS__clear_screen(void)
 {
     HANDLE hConsole = GetStdHandle( STD_OUTPUT_HANDLE );
@@ -58,6 +60,8 @@ void WINDOWS__clear_screen(void)
     PERR( bSuccess, "SetConsoleCursorPosition" );
     return;
 }
+
+#endif
 
 void POSIX__clear_screen(void)
 {

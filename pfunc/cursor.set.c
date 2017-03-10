@@ -24,6 +24,8 @@ int POSIX__set_cursor(int x, int y)
     return 0; // always succeeds
 }
 
+#ifdef SYSTEM_WINDOWS
+
 int WINDOWS__set_cursor(int x, int y)
 {
     HANDLE hConsole = GetStdHandle( STD_OUTPUT_HANDLE );
@@ -33,3 +35,5 @@ int WINDOWS__set_cursor(int x, int y)
     PERR( bSuccess, "SetConsoleCursorPosition" );
     return bSuccess;
 }
+
+#endif

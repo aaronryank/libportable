@@ -72,6 +72,7 @@ enum {
 
 #ifdef SYSTEM_WINDOWS
 # include <windows.h>
+# include <tchar.h>
 
 # ifndef __CYGWIN__
 #  include <conio.h>
@@ -85,6 +86,7 @@ enum {
 #ifdef SYSTEM_UNIX
 # include <unistd.h>
 # include <termios.h>
+# include <signal.h>
 #endif
 
 /****************************
@@ -140,10 +142,11 @@ enum {
  EXTERNS
  *******/
 
-EXTERN_PORTABLE(int, cursor, set)    (int, int);
-EXTERN_PORTABLE(void, screen, clear) (void);
-EXTERN_PORTABLE(int, cursor, home)   (void);
-EXTERN_PORTABLE(int, text, color)    (int);
+EXTERN_PORTABLE(int, cursor, set)     (int, int);
+EXTERN_PORTABLE(void, screen, clear)  (void);
+EXTERN_PORTABLE(int, cursor, home)    (void);
+EXTERN_PORTABLE(int, text, color)     (int);
+EXTERN_PORTABLE(int, system, execute) (const char *);
 
 // portability info
 extern char *get_system_name(void);
