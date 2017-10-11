@@ -34,7 +34,7 @@ int WINDOWS__system_execute(const char *cmd)
     cmdline     = _tcsdup(TEXT(cmd));
     programpath = _tcsdup(TEXT(cmd));
 
-    if (CreateProcess(programpath, cmdline, NULL, NULL, 0, 0, NULL, NULL, &s_info, &p_info))
+    if (CreateProcess(programpath, cmd, NULL, NULL, 0, 0, NULL, NULL, &s_info, &p_info))
     {
         WaitForSingleObject(p_info.hProcess, INFINITE);
         CloseHandle(p_info.hProcess);
@@ -48,6 +48,9 @@ int WINDOWS__system_execute(const char *cmd)
 #endif
 
 #ifdef POSIX
+
+#include <sys/types.h>
+#include <sys/wait.h>
 
 /* NOT COPYRIGHTED BY ME. from man7.org */
 int POSIX__system_execute(const char *cmd)
@@ -102,7 +105,7 @@ int POSIX__system_execute(const char *cmd)
 
         sigprocmask(SIG_SETMASK, &origMask, NULL);
 
-        execl("/bin/sh", "sh", "-c", command, (char *) NULL);
+        execl("/bin/sh", "sh", "-c", cmd, (char *) NULL);
         _exit(127);                     /* We could not exec the shell */
 
       default: /* Parent: wait for our child to terminate */

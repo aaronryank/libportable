@@ -5,7 +5,7 @@
 #include <io.h>
 #include <stdio.h>
 
-int WINDOWS__file_isatty(FILE *fd)
+int WINDOWS__tty_detect(FILE *fd)
 {
     return _isatty(fileno(fd));
 }
@@ -17,7 +17,7 @@ int WINDOWS__file_isatty(FILE *fd)
 #include <unistd.h>
 #include <stdio.h>
 
-int POSIX__file_isatty(FILE *fd)
+int POSIX__tty_detect(FILE *fd)
 {
     return isatty(fileno(fd));
 }

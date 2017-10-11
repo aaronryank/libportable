@@ -131,15 +131,15 @@ enum {
  CALL PORTABLE FUNCTIONS
  ***********************/
 
-#define ___P(x, y) x ## y
-#define __P(x, y) ___P(x, y)
+#define ___P_(x, y) x ## y
+#define __P_(x, y) ___P_(x, y)
 
 #ifdef POSIX
-# define EXTERN_PORTABLE(return_type, family, function) extern return_type __P(POSIX##__, __P(__P(function, _), family))
-# define PORTABLY(family, function, ...)  __P(POSIX##__, __P(__P(function, _), family))  (__VA_ARGS__)
+# define EXTERN_PORTABLE(return_type, family, function) extern return_type __P_(POSIX##__, __P_(__P_(function, _), family))
+# define PORTABLY(family, function, ...)  __P_(POSIX##__, __P_(__P_(function, _), family))  (__VA_ARGS__)
 #else
-# define EXTERN_PORTABLE(return_type, family, function) extern return_type __P(__P(SYSTEM, __), __P(__P(function, _), family))
-# define PORTABLY(family, function, ...)  __P(__P(SYSTEM, __), __P(__P(function, _), family))  (__VA_ARGS__)
+# define EXTERN_PORTABLE(return_type, family, function) extern return_type __P_(__P_(SYSTEM, __), __P_(__P_(function, _), family))
+# define PORTABLY(family, function, ...)  __P_(__P_(SYSTEM, __), __P_(__P_(function, _), family))  (__VA_ARGS__)
 #endif
 
 /*******
@@ -151,7 +151,7 @@ EXTERN_PORTABLE(void, screen, clear)  (void);
 EXTERN_PORTABLE(int, cursor, home)    (void);
 EXTERN_PORTABLE(int, text, color)     (int);
 EXTERN_PORTABLE(int, system, execute) (const char *);
-EXTERN_PORTABLE(int, file, isatty)    (FILE *);
+EXTERN_PORTABLE(int, detect, tty)     (FILE *);
 
 // portability info
 extern char *get_system_name(void);
