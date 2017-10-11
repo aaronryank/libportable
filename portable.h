@@ -18,6 +18,10 @@
 #ifndef _PORTABLE_H
 #define _PORTABLE_H
 
+#ifndef _STDIO_H
+#include <stdio.h>
+#endif
+
 /****************
  DETERMINE SYSTEM
  ****************/
@@ -147,6 +151,7 @@ EXTERN_PORTABLE(void, screen, clear)  (void);
 EXTERN_PORTABLE(int, cursor, home)    (void);
 EXTERN_PORTABLE(int, text, color)     (int);
 EXTERN_PORTABLE(int, system, execute) (const char *);
+EXTERN_PORTABLE(int, file, isatty)    (FILE *);
 
 // portability info
 extern char *get_system_name(void);
